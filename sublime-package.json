@@ -1,0 +1,112 @@
+{
+  "contributions": {
+    "settings": [
+      {
+        "file_patterns": [
+          "/LSP-sass.sublime-settings"
+        ],
+        "schema": {
+          "$id": "sublime://settings/LSP-sass",
+          "definitions": {
+            "PluginConfig": {
+              "properties": {
+                "settings": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "somesass.scannerDepth": {
+                      "type": "number",
+                      "default": 30,
+                      "description": "The maximum number of nested directories to scan."
+                    },
+                    "somesass.scannerExclude": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "default": [
+                        "**/.git/**",
+                        "**/node_modules/**",
+                        "**/bower_components/**"
+                      ],
+                      "description": "List of glob patterns for directories that are excluded when scanning."
+                    },
+                    "somesass.scanImportedFiles": {
+                      "type": "boolean",
+                      "default": true,
+                      "deprecationMessage": "Will be removed at some point after `@import` becomes CSS-only.",
+                      "description": "Allows scan imported files. Turning this off will severely limit functionality, and is not recommended."
+                    },
+                    "somesass.suggestionStyle": {
+                      "type": "string",
+                      "default": "all",
+                      "description": "Controls the style of suggestions for mixins and placeholders.",
+                      "enum": [
+                        "all",
+                        "nobracket",
+                        "bracket"
+                      ],
+                      "enumItemLabels": [
+                        "All",
+                        "No brackets",
+                        "Only brackets"
+                      ],
+                      "enumDescriptions": [
+                        "Show all suggestions",
+                        "Only show suggestions without brackets",
+                        "Where brackets are suggested, omit duplicates without brackets"
+                      ]
+                    },
+                    "somesass.suggestAllFromOpenDocument": {
+                      "type": "boolean",
+                      "default": false,
+                      "description": "VS Code has built-in code suggestions for symbols declared in the open document. If you prefer the suggestions from Some Sass, you can opt in by turning on this setting. There will be duplicates."
+                    },
+                    "somesass.suggestFromUseOnly": {
+                      "type": "boolean",
+                      "default": false,
+                      "description": "If your project uses the new module system with @use and @forward, you may want to only include suggestions from your used modules."
+                    },
+                    "somesass.suggestFunctionsInStringContextAfterSymbols": {
+                      "type": "string",
+                      "default": " (+-*%",
+                      "description": "Allows prompt Functions in String context after specified symbols."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "type": "object",
+          "allOf": [
+            {
+              "$ref": "sublime://settings/LSP-plugin-base"
+            },
+            {
+              "$ref": "sublime://settings/LSP-sass#/definitions/PluginConfig"
+            }
+          ]
+        }
+      },
+      {
+        "file_patterns": [
+          "/*.sublime-project"
+        ],
+        "schema": {
+          "properties": {
+            "settings": {
+              "properties": {
+                "LSP": {
+                  "properties": {
+                    "LSP-sass": {
+                      "$ref": "sublime://settings/LSP-sass#/definitions/PluginConfig"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    ]
+  }
+}
