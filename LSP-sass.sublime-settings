@@ -1,6 +1,7 @@
 {
 	"command": ["${node_bin}", "${server_path}", "--stdio"],
 	"settings": {
+		"somesass.loadPaths": [],
 		"somesass.scannerDepth": 30,
 		"somesass.scannerExclude": [
 			"**/.git/**",
