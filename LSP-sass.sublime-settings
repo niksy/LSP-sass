@@ -12,7 +12,9 @@
 		"somesass.suggestionStyle": "all",
 		"somesass.suggestAllFromOpenDocument": false,
 		"somesass.suggestFromUseOnly": false,
-		"somesass.suggestFunctionsInStringContextAfterSymbols": " (+-*%"
+		"somesass.suggestFunctionsInStringContextAfterSymbols": " (+-*%",
+		"somesass.afterModule": "",
+		"somesass.beforeVariable": ""
 	},
 	"selector": "source.scss | text.html.vue"
 }

@@ -78,6 +78,16 @@
                       "type": "string",
                       "default": " (+-*%",
                       "description": "Allows prompt Functions in String context after specified symbols."
+                    },
+                    "somesass.afterModule": {
+                      "type": "string",
+                      "default": "",
+                      "description": "Set this to the empty string if you end up with `module..$variable` after accepting a code suggestion item."
+                    },
+                    "somesass.beforeVariable": {
+                      "type": "string",
+                      "default": "",
+                      "description": "Set this to the empty string if you end up with `$$variable` after accepting a code suggestion item."
                     }
                   }
                 }
