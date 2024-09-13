@@ -13,8 +13,8 @@
 		"somesass.suggestAllFromOpenDocument": false,
 		"somesass.suggestFromUseOnly": false,
 		"somesass.suggestFunctionsInStringContextAfterSymbols": " (+-*%",
-		"somesass.afterModule": "",
-		"somesass.beforeVariable": ""
+		"somesass.completion.afterModule": "{module}",
+		"somesass.completion.beforeVariable": ""
 	},
-	"selector": "source.scss | text.html.vue"
+	"selector": "source.scss"
 }
