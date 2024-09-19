@@ -78,16 +78,6 @@
                       "type": "string",
                       "default": " (+-*%",
                       "description": "Allows prompt Functions in String context after specified symbols."
-                    },
-                    "somesass.completion.afterModule": {
-                      "type": "string",
-                      "default": "{module}",
-                      "description": "Set this to the empty string if you end up with `module..$variable` after accepting a code suggestion item. If `module.` or `module` disappears, you can set it to `\"{module}.\"` or `\"{module}\"` respectively. That is a \"magic string\" that will be replaced with the actual module name."
-                    },
-                    "somesass.completion.beforeVariable": {
-                      "type": "string",
-                      "default": "",
-                      "description": "Set this to the empty string if you end up with `$$variable` after accepting a code suggestion item."
                     }
                   }
                 }

@@ -12,9 +12,7 @@
 		"somesass.suggestionStyle": "all",
 		"somesass.suggestAllFromOpenDocument": false,
 		"somesass.suggestFromUseOnly": false,
-		"somesass.suggestFunctionsInStringContextAfterSymbols": " (+-*%",
-		"somesass.completion.afterModule": "{module}",
-		"somesass.completion.beforeVariable": ""
+		"somesass.suggestFunctionsInStringContextAfterSymbols": " (+-*%"
 	},
 	"selector": "source.scss"
 }
