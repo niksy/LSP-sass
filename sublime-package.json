@@ -13,20 +13,15 @@
                 "settings": {
                   "additionalProperties": false,
                   "properties": {
-                    "somesass.loadPaths": {
+                    "somesass.workspace.loadPaths": {
                       "type": "array",
                       "items": {
                         "type": "string"
                       },
                       "default": [],
-                      "description": "List of paths relative to the workspace root that should be treated as load paths (formerly known as includePaths)"
+                      "description": "A list of paths relative to the workspace root where the language server should look for stylesheets loaded by @use and @import. node_modules is always included. Note that you will have to configure your Sass compiler separately."
                     },
-                    "somesass.scannerDepth": {
-                      "type": "number",
-                      "default": 30,
-                      "description": "The maximum number of nested directories to scan."
-                    },
-                    "somesass.scannerExclude": {
+                    "somesass.workspace.exclude": {
                       "type": "array",
                       "items": {
                         "type": "string"
@@ -36,18 +31,64 @@
                         "**/node_modules/**",
                         "**/bower_components/**"
                       ],
-                      "description": "List of glob patterns for directories that are excluded when scanning."
+                      "description": "List of glob patterns for directories that are excluded in the initial scan for Sass files. Files in the exclude list will still be processed if referenced by @use, @forward and @import (for example a depencendy you use from node_modules)."
                     },
-                    "somesass.scanImportedFiles": {
+                    "somesass.workspace.loglevel": {
+                      "type": "string",
+                      "default": "info",
+                      "enum": [
+                        "fatal",
+                        "error",
+                        "warn",
+                        "info",
+                        "debug",
+                        "trace"
+                      ],
+                      "description": "Control how much gets logged to the Output window."
+                    },
+                    "somesass.trace.server": {
+                      "type": "string",
+                      "default": "off",
+                      "enum": [
+                        "off",
+                        "messages",
+                        "verbose"
+                      ],
+                      "description": "Log the messages sent between VS Code and the Some Sass language server."
+                    },
+                    "somesass.scss.codeAction.enabled": {
                       "type": "boolean",
                       "default": true,
-                      "deprecationMessage": "Will be removed at some point after `@import` becomes CSS-only.",
-                      "description": "Allows scan imported files. Turning this off will severely limit functionality, and is not recommended."
+                      "description": "Enable or disable all code actions."
                     },
-                    "somesass.suggestionStyle": {
+                    "somesass.scss.colors.enabled": {
+                      "type": "boolean",
+                      "default": true,
+                      "description": "Enable or disable all color decorators."
+                    },
+                    "somesass.scss.colors.includeFromCurrentDocument": {
+                      "type": "boolean",
+                      "default": false,
+                      "description": "Compatibility setting for VS Code. By default the built-in SCSS server shows color decorators for variables declared in the current document. To avoid duplicates Some Sass will not show them unless you opt in."
+                    },
+                    "somesass.scss.completion.enabled": {
+                      "type": "boolean",
+                      "default": true,
+                      "description": "Enable or disable all completions (IntelliSense)."
+                    },
+                    "somesass.scss.completion.includeFromCurrentDocument": {
+                      "type": "boolean",
+                      "default": false,
+                      "description": "Compatibility setting for VS Code. By default the built-in SCSS server shows suggestions for variables, mixins and functions declared in the current document. To avoid duplicates Some Sass will not suggest them unless you opt in."
+                    },
+                    "somesass.scss.completion.suggestFromUseOnly": {
+                      "type": "boolean",
+                      "default": false,
+                      "description": "If your project uses the new module system with @use and @forward, you may want to only include suggestions from your used modules."
+                    },
+                    "somesass.scss.completion.mixinStyle": {
                       "type": "string",
                       "default": "all",
-                      "description": "Controls the style of suggestions for mixins and placeholders.",
                       "enum": [
                         "all",
                         "nobracket",
@@ -61,23 +102,337 @@
                       "enumDescriptions": [
                         "Show all suggestions",
                         "Only show suggestions without brackets",
-                        "Where brackets are suggested, omit duplicates without brackets"
-                      ]
+                        "Where brackets are suggested, don't suggest without brackets"
+                      ],
+                      "description": "Controls the style of suggestions for mixins."
                     },
-                    "somesass.suggestAllFromOpenDocument": {
+                    "somesass.scss.completion.triggerPropertyValueCompletion": {
+                      "type": "boolean",
+                      "default": true,
+                      "description": "By default, Some Sass triggers property value completion after selecting a CSS property. Use this setting to disable this behavior."
+                    },
+                    "somesass.scss.completion.completePropertyWithSemicolon": {
+                      "type": "boolean",
+                      "default": true,
+                      "description": "Insert semicolon at end of line when completing CSS properties."
+                    },
+                    "somesass.scss.definition.enabled": {
+                      "type": "boolean",
+                      "default": true,
+                      "description": "Enable or disable Go to Definition."
+                    },
+                    "somesass.scss.diagnostics.enabled": {
+                      "type": "boolean",
+                      "default": true,
+                      "description": "Enable or disable all diagnostics (deprecation, errors and lint rules)."
+                    },
+                    "somesass.scss.diagnostics.deprecation.enabled": {
+                      "type": "boolean",
+                      "default": true,
+                      "description": "Enable or disable deprecation diagnostics (strike-through)."
+                    },
+                    "somesass.scss.diagnostics.lint.enabled": {
                       "type": "boolean",
                       "default": false,
-                      "description": "VS Code has built-in code suggestions for symbols declared in the open document. If you prefer the suggestions from Some Sass, you can opt in by turning on this setting. There will be duplicates."
+                      "description": "Enable or disable all linting."
                     },
-                    "somesass.suggestFromUseOnly": {
+                    "somesass.scss.diagnostics.lint.*": {
+                      "type": "string",
+                      "default": "",
+                      "description": "For the available lint rules and what they do, see the VS Code docs for CSS and SCSS lint settings."
+                    },
+                    "somesass.scss.foldingRanges.enabled": {
+                      "type": "boolean",
+                      "default": false,
+                      "description": "Enable or disable folding ranges."
+                    },
+                    "somesass.scss.highlights.enabled": {
+                      "type": "boolean",
+                      "default": false,
+                      "description": "Enable or disable highlights."
+                    },
+                    "somesass.scss.hover.enabled": {
+                      "type": "boolean",
+                      "default": true,
+                      "description": "Enable or disable all hover information."
+                    },
+                    "somesass.scss.hover.documentation": {
+                      "type": "boolean",
+                      "default": true,
+                      "description": "Show property and value documentation in CSS hovers."
+                    },
+                    "somesass.scss.hover.references": {
+                      "type": "boolean",
+                      "default": true,
+                      "description": "Show references to MDN in CSS hovers, Sass documentation for Sass built-in modules and SassDoc for annotations."
+                    },
+                    "somesass.scss.links.enabled": {
+                      "type": "boolean",
+                      "default": false,
+                      "description": "Enable or disable the link provider that lets you click an import and open the file."
+                    },
+                    "somesass.scss.references.enabled": {
+                      "type": "boolean",
+                      "default": true,
+                      "description": "Enable or disable Find all references."
+                    },
+                    "somesass.scss.rename.enabled": {
+                      "type": "boolean",
+                      "default": true,
+                      "description": "Enable or disable Rename."
+                    },
+                    "somesass.scss.selectionRanges.enabled": {
+                      "type": "boolean",
+                      "default": false,
+                      "description": "Enable or disable selection ranges."
+                    },
+                    "somesass.scss.signatureHelp.enabled": {
+                      "type": "boolean",
+                      "default": true,
+                      "description": "Enable or disable signature help."
+                    },
+                    "somesass.scss.workspaceSymbol.enabled": {
+                      "type": "boolean",
+                      "default": true,
+                      "description": "Enable or disable workspace symbol."
+                    },
+                    "somesass.sass.codeAction.enabled": {
+                      "type": "boolean",
+                      "default": true,
+                      "description": "Enable or disable all code actions."
+                    },
+                    "somesass.sass.colors.enabled": {
+                      "type": "boolean",
+                      "default": true,
+                      "description": "Enable or disable all color decorators."
+                    },
+                    "somesass.sass.completion.enabled": {
+                      "type": "boolean",
+                      "default": true,
+                      "description": "Enable or disable all completions (IntelliSense)."
+                    },
+                    "somesass.sass.completion.suggestFromUseOnly": {
                       "type": "boolean",
                       "default": false,
                       "description": "If your project uses the new module system with @use and @forward, you may want to only include suggestions from your used modules."
                     },
-                    "somesass.suggestFunctionsInStringContextAfterSymbols": {
+                    "somesass.sass.completion.mixinStyle": {
                       "type": "string",
-                      "default": " (+-*%",
-                      "description": "Allows prompt Functions in String context after specified symbols."
+                      "default": "all",
+                      "enum": [
+                        "all",
+                        "nobracket",
+                        "bracket"
+                      ],
+                      "enumItemLabels": [
+                        "All",
+                        "No brackets",
+                        "Only brackets"
+                      ],
+                      "enumDescriptions": [
+                        "Show all suggestions",
+                        "Only show suggestions without brackets",
+                        "Where brackets are suggested, don't suggest without brackets"
+                      ],
+                      "description": "Controls the style of suggestions for mixins."
+                    },
+                    "somesass.sass.completion.triggerPropertyValueCompletion": {
+                      "type": "boolean",
+                      "default": true,
+                      "description": "By default, Some Sass triggers property value completion after selecting a CSS property. Use this setting to disable this behavior."
+                    },
+                    "somesass.sass.definition.enabled": {
+                      "type": "boolean",
+                      "default": true,
+                      "description": "Enable or disable Go to Definition."
+                    },
+                    "somesass.sass.diagnostics.enabled": {
+                      "type": "boolean",
+                      "default": true,
+                      "description": "Enable or disable all diagnostics (deprecation, errors and lint rules)."
+                    },
+                    "somesass.sass.diagnostics.deprecation.enabled": {
+                      "type": "boolean",
+                      "default": true,
+                      "description": "Enable or disable deprecation diagnostics (strike-through)."
+                    },
+                    "somesass.sass.diagnostics.lint.enabled": {
+                      "type": "boolean",
+                      "default": true,
+                      "description": "Enable or disable all linting."
+                    },
+                    "somesass.sass.diagnostics.lint.*": {
+                      "type": "string",
+                      "default": "",
+                      "description": "For the available lint rules and what they do, see the VS Code docs for CSS and SCSS lint settings."
+                    },
+                    "somesass.sass.foldingRanges.enabled": {
+                      "type": "boolean",
+                      "default": true,
+                      "description": "Enable or disable folding ranges."
+                    },
+                    "somesass.sass.highlights.enabled": {
+                      "type": "boolean",
+                      "default": true,
+                      "description": "Enable or disable highlights."
+                    },
+                    "somesass.sass.hover.enabled": {
+                      "type": "boolean",
+                      "default": true,
+                      "description": "Enable or disable all hover information."
+                    },
+                    "somesass.sass.hover.documentation": {
+                      "type": "boolean",
+                      "default": true,
+                      "description": "Show property and value documentation in CSS hovers."
+                    },
+                    "somesass.sass.hover.references": {
+                      "type": "boolean",
+                      "default": true,
+                      "description": "Show references to MDN in CSS hovers, Sass documentation for Sass built-in modules and SassDoc for annotations."
+                    },
+                    "somesass.sass.links.enabled": {
+                      "type": "boolean",
+                      "default": true,
+                      "description": "Enable or disable the link provider that lets you click an import and open the file."
+                    },
+                    "somesass.sass.references.enabled": {
+                      "type": "boolean",
+                      "default": true,
+                      "description": "Enable or disable Find all references."
+                    },
+                    "somesass.sass.rename.enabled": {
+                      "type": "boolean",
+                      "default": true,
+                      "description": "Enable or disable Rename."
+                    },
+                    "somesass.sass.selectionRanges.enabled": {
+                      "type": "boolean",
+                      "default": true,
+                      "description": "Enable or disable selection ranges."
+                    },
+                    "somesass.sass.signatureHelp.enabled": {
+                      "type": "boolean",
+                      "default": true,
+                      "description": "Enable or disable signature help."
+                    },
+                    "somesass.sass.workspaceSymbol.enabled": {
+                      "type": "boolean",
+                      "default": true,
+                      "description": "Enable or disable workspace symbol."
+                    },
+                    "somesass.css.codeAction.enabled": {
+                      "type": "boolean",
+                      "default": false,
+                      "description": "Enable or disable all code actions."
+                    },
+                    "somesass.css.colors.enabled": {
+                      "type": "boolean",
+                      "default": false,
+                      "description": "Enable or disable all color decorators."
+                    },
+                    "somesass.css.completion.enabled": {
+                      "type": "boolean",
+                      "default": false,
+                      "description": "Enable or disable all completions (IntelliSense)."
+                    },
+                    "somesass.css.completion.triggerPropertyValueCompletion": {
+                      "type": "boolean",
+                      "default": true,
+                      "description": "By default, Some Sass triggers property value completion after selecting a CSS property. Use this setting to disable this behavior."
+                    },
+                    "somesass.css.completion.completePropertyWithSemicolon": {
+                      "type": "boolean",
+                      "default": true,
+                      "description": "Insert semicolon at end of line when completing CSS properties."
+                    },
+                    "somesass.css.definition.enabled": {
+                      "type": "boolean",
+                      "default": false,
+                      "description": "Enable or disable Go to Definition."
+                    },
+                    "somesass.css.diagnostics.enabled": {
+                      "type": "boolean",
+                      "default": false,
+                      "description": "Enable or disable all diagnostics (deprecation, errors and lint rules)."
+                    },
+                    "somesass.css.diagnostics.deprecation.enabled": {
+                      "type": "boolean",
+                      "default": false,
+                      "description": "Enable or disable deprecation diagnostics (strike-through)."
+                    },
+                    "somesass.css.diagnostics.lint.enabled": {
+                      "type": "boolean",
+                      "default": false,
+                      "description": "Enable or disable all linting."
+                    },
+                    "somesass.css.diagnostics.lint.*": {
+                      "type": "string",
+                      "default": "",
+                      "description": "For the available lint rules and what they do, see the VS Code docs for CSS and SCSS lint settings."
+                    },
+                    "somesass.css.foldingRanges.enabled": {
+                      "type": "boolean",
+                      "default": false,
+                      "description": "Enable or disable folding ranges."
+                    },
+                    "somesass.css.highlights.enabled": {
+                      "type": "boolean",
+                      "default": false,
+                      "description": "Enable or disable highlights."
+                    },
+                    "somesass.css.hover.enabled": {
+                      "type": "boolean",
+                      "default": false,
+                      "description": "Enable or disable all hover information."
+                    },
+                    "somesass.css.hover.documentation": {
+                      "type": "boolean",
+                      "default": false,
+                      "description": "Show property and value documentation in CSS hovers."
+                    },
+                    "somesass.css.hover.references": {
+                      "type": "boolean",
+                      "default": false,
+                      "description": "Show references to MDN in CSS hovers, Sass documentation for Sass built-in modules and SassDoc for annotations."
+                    },
+                    "somesass.css.links.enabled": {
+                      "type": "boolean",
+                      "default": false,
+                      "description": "Enable or disable the link provider that lets you click an import and open the file."
+                    },
+                    "somesass.css.references.enabled": {
+                      "type": "boolean",
+                      "default": false,
+                      "description": "Enable or disable Find all references."
+                    },
+                    "somesass.css.rename.enabled": {
+                      "type": "boolean",
+                      "default": false,
+                      "description": "Enable or disable Rename."
+                    },
+                    "somesass.css.selectionRanges.enabled": {
+                      "type": "boolean",
+                      "default": false,
+                      "description": "Enable or disable selection ranges."
+                    },
+                    "somesass.css.signatureHelp.enabled": {
+                      "type": "boolean",
+                      "default": false,
+                      "description": "Enable or disable signature help."
+                    },
+                    "somesass.css.workspaceSymbol.enabled": {
+                      "type": "boolean",
+                      "default": false,
+                      "description": "Enable or disable workspace symbol."
+                    },
+                    "somesass.css.customData": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "default": [],
+                      "description": "A list of relative file paths pointing to JSON files following the custom data format. Some Sass loads custom data on startup to enhance its CSS support for CSS custom properties (variables), at-rules, pseudo-classes, and pseudo-elements you specify in the JSON files. The file paths are relative to workspace and only workspace folder settings are considered."
                     }
                   }
                 }
