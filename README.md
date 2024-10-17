@@ -7,6 +7,7 @@ Provided through [Some Sass language server](https://github.com/wkillerud/some-s
 ### Installation
 
 * Install [LSP](https://packagecontrol.io/packages/LSP) and `LSP-sass` via Package Control.
+* Install [Sass syntax higlight package](https://packagecontrol.io/packages/Sass).
 * Restart Sublime.
 
 ### Configuration
